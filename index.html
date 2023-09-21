@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .message {
+            background-color: green;
+            padding: 20px;
+            color: white;
+        }
+        .question-container {
+            display: none;
+            padding: 20px;
+        }
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .option-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #next-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="message" id="message">
+        <p>Welcome to the Quiz!</p>
+        <button id="start-button">Start</button>
+    </div>
+
+    <div class="question-container" id="question-container">
+        <p id="question-text">Question 1: What is the capital of France?</p>
+        <div class="options">
+            <button class="option-button" id="option-a">A) Paris</button>
+            <button class="option-button" id="option-b">B) London</button>
+        </div>
+        <button id="next-button">Next</button>
+    </div>
+
+    <script>
+        const messageContainer = document.getElementById('message');
+        const startButton = document.getElementById('start-button');
+        const questionContainer = document.getElementById('question-container');
+        const questionText = document.getElementById('question-text');
+        const optionA = document.getElementById('option-a');
+        const optionB = document.getElementById('option-b');
+        const nextButton = document.getElementById('next-button');
+        let currentQuestion = 1;
+
+        startButton.addEventListener('click', () => {
+            messageContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion === 2) {
+                questionText.textContent = "Question 2: What is the capital of Spain?";
+                optionA.textContent = "A) Madrid";
+                optionB.textContent = "B) Berlin";
+            }
+            // Add more questions and options as needed
+
+            // Hide the next button after the last question
+            if (currentQuestion === 3) {
+                nextButton.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
