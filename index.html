@@ -8,35 +8,46 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: green;
+            color: white;
         }
         .message {
-            background-color: green;
-            padding: 20px;
-            color: white;
+            font-size: 24px;
         }
         .question-container {
             display: none;
             padding: 20px;
+            font-size: 24px;
         }
         .options {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             gap: 20px;
         }
         .option-button {
-            padding: 10px 20px;
+            padding: 15px 30px;
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
+            font-size: 20px;
         }
-        #next-button {
+        .final-message {
+            display: none;
+            font-size: 24px;
             margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
+        }
+        #inspirational-message {
+            display: none;
+            font-size: 24px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -52,7 +63,15 @@
             <button class="option-button" id="option-a">A) Paris</button>
             <button class="option-button" id="option-b">B) London</button>
         </div>
-        <button id="next-button">Next</button>
+    </div>
+
+    <div class="final-message" id="final-message">
+        <p>Congratulations! You have completed the quiz.</p>
+        <button id="show-inspirational-message">Next</button>
+    </div>
+
+    <div id="inspirational-message">
+        <p>Here's your inspirational message: "Believe in yourself and keep moving forward!"</p>
     </div>
 
     <script>
@@ -62,27 +81,94 @@
         const questionText = document.getElementById('question-text');
         const optionA = document.getElementById('option-a');
         const optionB = document.getElementById('option-b');
-        const nextButton = document.getElementById('next-button');
+        const finalMessage = document.getElementById('final-message');
+        const inspirationalMessage = document.getElementById('inspirational-message');
+        const showInspirationalMessageButton = document.getElementById('show-inspirational-message');
         let currentQuestion = 1;
+
+        const questions = [
+            {
+                text: "What is the capital of France?",
+                correctAnswer: "A) Paris",
+                options: ["A) Paris", "B) London"]
+            },
+            {
+                text: "What is the capital of Spain?",
+                correctAnswer: "A) Madrid",
+                options: ["A) Madrid", "B) Berlin"]
+            },
+            {
+                text: "What is the largest planet in our solar system?",
+                correctAnswer: "A) Jupiter",
+                options: ["A) Jupiter", "B) Saturn"]
+            },
+            {
+                text: "Which gas do plants absorb from the atmosphere?",
+                correctAnswer: "A) Carbon dioxide",
+                options: ["A) Carbon dioxide", "B) Oxygen"]
+            },
+            {
+                text: "What is the chemical symbol for water?",
+                correctAnswer: "A) H2O",
+                options: ["A) H2O", "B) CO2"]
+            }
+        ];
+
+        function shuffleOptions(options) {
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+        }
+
+        function displayQuestion(questionIndex) {
+            if (questionIndex <= questions.length) {
+                const currentQuestionObj = questions[questionIndex - 1];
+                questionText.textContent = `Question ${questionIndex}: ${currentQuestionObj.text}`;
+                shuffleOptions(currentQuestionObj.options); // Shuffle options
+                optionA.textContent = currentQuestionObj.options[0];
+                optionB.textContent = currentQuestionObj.options[1];
+            } else {
+                // Quiz finished
+                questionContainer.style.display = 'none';
+                finalMessage.style.display = 'block';
+            }
+        }
 
         startButton.addEventListener('click', () => {
             messageContainer.style.display = 'none';
             questionContainer.style.display = 'block';
+            displayQuestion(currentQuestion);
         });
 
-        nextButton.addEventListener('click', () => {
-            currentQuestion++;
-            if (currentQuestion === 2) {
-                questionText.textContent = "Question 2: What is the capital of Spain?";
-                optionA.textContent = "A) Madrid";
-                optionB.textContent = "B) Berlin";
-            }
-            // Add more questions and options as needed
+        function checkAnswer(selectedOption) {
+            if (currentQuestion <= questions.length) {
+                if (selectedOption.textContent === questions[currentQuestion - 1].correctAnswer) {
+                    selectedOption.style.backgroundColor = 'green';
+                } else {
+                    selectedOption.style.backgroundColor = 'red';
+                    alert('Try Again');
+                }
 
-            // Hide the next button after the last question
-            if (currentQuestion === 3) {
-                nextButton.style.display = 'none';
+                setTimeout(() => {
+                    selectedOption.style.backgroundColor = '';
+                    currentQuestion++;
+                    displayQuestion(currentQuestion);
+                }, 1000);
             }
+        }
+
+        optionA.addEventListener('click', () => {
+            checkAnswer(optionA);
+        });
+
+        optionB.addEventListener('click', () => {
+            checkAnswer(optionB);
+        });
+
+        showInspirationalMessageButton.addEventListener('click', () => {
+            finalMessage.style.display = 'none';
+            inspirationalMessage.style.display = 'block';
         });
     </script>
 </body>
